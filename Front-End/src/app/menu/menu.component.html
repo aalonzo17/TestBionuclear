@@ -1,0 +1,31 @@
+<mat-toolbar color="primary" >  
+    <span>
+        <a mat-button class="font" routerLink="">
+            <mat-icon>map</mat-icon> Test Bionuclear
+        </a>
+    </span>
+    <app-autorizado [rol]="'admin'">
+        <ng-container autorizado>
+            <div>
+                <a mat-button class="font" routerLink="clientes" >Clientes</a>
+            </div>
+            <div>
+                <a mat-button class="font" routerLink="usuarios">Usuarios</a>
+              </div>
+        </ng-container>
+    </app-autorizado>
+
+    <div class="espacio"></div>
+
+    <app-autorizado>
+        <ng-container autorizado>
+        <span>Hola, {{seguridadService.obtenerCampoJWT('email')}}</span>
+        <a mat-button class="font" (click)="seguridadService.logout()">Logout</a>
+        </ng-container>
+        <ng-container noAutorizado>
+        <a mat-button class="font" routerLink="Login">Login</a>
+        <a mat-button class="font" routerLink="registro">Registro</a>
+        </ng-container>
+    </app-autorizado>  
+
+</mat-toolbar>

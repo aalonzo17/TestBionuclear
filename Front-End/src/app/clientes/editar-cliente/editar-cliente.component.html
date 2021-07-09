@@ -1,0 +1,7 @@
+<app-formulario-cliente 
+*ngIf="modelo"
+[modelo]="modelo"
+[errores]="errores"
+(onSubmit)="guardarCambios($event)"></app-formulario-cliente>
+
+<mat-spinner *ngIf="!modelo" [diameter]="50" class="mat-spinner-color spinner"></mat-spinner>

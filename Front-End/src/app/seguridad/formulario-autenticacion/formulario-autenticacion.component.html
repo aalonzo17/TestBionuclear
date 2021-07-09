@@ -1,0 +1,26 @@
+<mat-card>
+    <mat-card-content>
+      <div class="header">
+        <h1>{{accion}}</h1>
+      </div>
+      <app-mostrar-error [errores]="errores"></app-mostrar-error>
+      <form (submit)="onSubmit.emit(form.value)" [formGroup]="form">
+        <mat-form-field class="full-width" appearance="outline">
+            <mat-label>Email</mat-label>
+            <input formControlName="email" matInput />
+            <mat-error>{{obtenerMensajeErrorEmail()}}</mat-error>
+        </mat-form-field><br>    
+        <mat-form-field class="full-width" appearance="outline">
+            <mat-label>Password</mat-label>
+            <input type="password" formControlName="password" matInput />
+            <mat-error>El campo Password es requerido</mat-error>
+        </mat-form-field>
+    
+        <div>
+            <button mat-flat-button color="primary" [disabled]="form.invalid">
+                {{accion}}
+            </button>
+        </div>
+        </form>  
+    </mat-card-content>  
+</mat-card>
