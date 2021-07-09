@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Back_End.Entidades
 {
+    /*Esta es la entidad que representa los clientes*/
     public class Clientes
     {
         [Key]

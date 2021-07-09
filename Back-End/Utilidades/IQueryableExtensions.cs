@@ -8,6 +8,7 @@ namespace Back_End.Utilidades
 {
     public static class IQueryableExtensions
     {
+        /*Este metodod me permite encasular la logica de paginacion para cada pagina*/
         public static IQueryable<T> Paginar<T>(this IQueryable<T> queryable, PaginacionDTO paginacionDTO)
         {
             return queryable

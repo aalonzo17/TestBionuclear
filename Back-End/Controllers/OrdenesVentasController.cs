@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Back_End.Controllers
 {
+    //API DEFINIDO PARA LAS ORDENES DE VENTAS
     [Route("api/ordenes")]
     [ApiController]
     public class OrdenesVentasController : Controller
@@ -18,6 +19,7 @@ namespace Back_End.Controllers
             _aplicationDbContext = aplicationDbContext;
         }
 
+        //METODO DEL API QUE CREA 25 ORDENES DE VENTAS POR CADA CLIENTE CON VALORES RANDOM
         [HttpPost("todas")]
         public void todas()
         {

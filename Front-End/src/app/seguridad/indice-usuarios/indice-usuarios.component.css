@@ -1,0 +1,49 @@
+.mostrar{
+    display: flex;
+}
+
+.font-color{
+    color: white;
+}
+
+.mar{
+    margin-left: 2rem ;
+    margin-right: 2rem ;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+mat-label,mat-form-field{
+    color: white !important;
+}
+th{
+    text-align: center !important;
+}
+
+.text{
+    text-align: center;
+}
+
+.add{
+    font-size: 80px;
+    color: white;
+    width: 30px !important;
+    height: 30px !important;
+}
+
+.mar-table{
+    margin-left: 2rem ;
+    margin-right: 2rem ;
+    width: 96%;
+    border-radius: 1rem;
+}
+
+.mar-page{
+    margin-left: 2rem ;
+    margin-right: 2rem ;
+    width: 96%;
+}
+
+
+.espacio {
+    flex: 1 1 auto;
+}

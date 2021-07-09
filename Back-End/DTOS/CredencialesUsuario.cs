@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Back_End.DTOS
 {
+    /*DTOS PARA LA VALIDACION DE CREDENCIALES DE USUARIOS DONDE TIENE COMO PROPIEDADES EL EMAIL Y EL PASSWORD*/
     public class CredencialesUsuario
     {
         [EmailAddress]

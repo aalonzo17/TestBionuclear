@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace Back_End.DTOS
 {
+    /*Este DTO se creo para la validacion de la informacion de usuarios*/
     public class UsuarioDTO
     {
         public string Id { get; set; }

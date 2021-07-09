@@ -18,15 +18,19 @@ using System.Threading.Tasks;
 
 namespace Back_End.Controllers
 {
+    //API DEFINIDA PARA LA ENTIDAD USUARIO
     [Route("api/usuarios")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class UsuariosController : ControllerBase
     {
+        //VARIABLES DE AMBIENTES DE IDENTITY PARA MANEJAR LOS USUARIOS 
         private readonly UserManager<IdentityUser> userManager;
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly IConfiguration configuration;
         private readonly AplicationDbContext context;
 
+        //CONSTRUCTOR
         public UsuariosController(UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             IConfiguration configuration,
@@ -38,8 +42,9 @@ namespace Back_End.Controllers
             this.context = context;
         }
 
+        //METODO DEL API TIPO GET QUE DEVUELVE UN LISTADO DE USUARIOS
         [HttpGet("listadoUsuarios")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        
         public async Task<ActionResult<List<UsuarioDTO>>> ListadoUsuarios([FromQuery] PaginacionDTO paginacionDTO)
         {
             var queryable = context.Users.AsQueryable();
@@ -47,8 +52,9 @@ namespace Back_End.Controllers
             return await queryable.Select(x => new UsuarioDTO { Id = x.Id, Email = x.Email}).Paginar(paginacionDTO).ToListAsync();
         }
 
+        //METODO DE API TIPO POST QUE AGREGA EL ROL ADMIN A LOS USUARIOS
+
         [HttpPost("HacerAdmin")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult> HacerAdmin([FromBody] string usuarioId)
         {
             var usuario = await userManager.FindByIdAsync(usuarioId);
@@ -56,7 +62,7 @@ namespace Back_End.Controllers
             return NoContent();
         }
 
-
+        //METODO DEL API TIPO POST QUE REMUEVE EL ROL ADMIN A LOS USUARIOS
         [HttpPost("RemoverAdmin")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult> RemoverAdmin([FromBody] string usuarioId)
@@ -66,6 +72,9 @@ namespace Back_End.Controllers
             return NoContent();
         }
 
+        //METODO DEL API TIPO POST QUE RESGISTRA Y CREA UN USUARIO PARA LA PRUEBA SE AGREGA EL ROL ADMIN DESDE LA CREACION 
+        //Y PERMITE SU ACESSO COMO ANONIMO
+        [AllowAnonymous]
         [HttpPost("crear")]
         public async Task<ActionResult<RespuestaAutenticacion>> Crear([FromBody] CredencialesUsuario credenciales)
         {
@@ -93,6 +102,8 @@ namespace Back_End.Controllers
             }
         }
 
+        //METODO DEL API TIPO POS QUE VALIDA LA AUTENTICACION DEL USUARIO EN EL LOGIN Y PERMITE SU ACCESO COMO ANONIMO
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ActionResult<RespuestaAutenticacion>> Login([FromBody] CredencialesUsuario credenciales)
         {
@@ -108,6 +119,9 @@ namespace Back_End.Controllers
                 return BadRequest("Nombre de usuario o la contraseña esta incorreta.");
             }
         }
+
+        /*METODO INTERNO DEL API QUE REALIZA LA CREACION DE WEB TOKEN PARA LAS VALIDACIONES DE
+        LA SESSION DEL USUARIO SE CREA CON FECHA DE VENCIMIENTO DE UN ANO PERO SE PUEDE DEFINIR*/
 
         private async Task<RespuestaAutenticacion> ConstruirToken(CredencialesUsuario credenciales)
         {

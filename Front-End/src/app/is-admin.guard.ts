@@ -19,7 +19,7 @@ export class IsAdminGuard implements CanActivate {
       return true;
     }
     
-    this.router.navigate(['/Login']);
+    this.router.navigate(['/landing']);
     return false;
   }
   

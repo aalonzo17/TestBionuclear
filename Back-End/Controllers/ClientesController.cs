@@ -17,20 +17,26 @@ using System.Threading.Tasks;
 
 namespace Back_End.Controllers
 {
+    //ESTA EL EL API DEFINIDA PARA LA ENTIDAD DE CLIENTES
     [Route("api/clientes")]
     [ApiController]
+    //SOLO SE PERMITE EL ACCESO A USUARIO AUTORIZADOS CON SU RESPECTIVO WEB TOKEN
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ClientesController : Controller
     {
+        // VARIABLES DE AMBIENTE
         private readonly AplicationDbContext _aplicationDbContext;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        //CONTRUCTOR CON VARIABLES DE AMBIENTE
         public ClientesController(AplicationDbContext aplicationDbContext, IWebHostEnvironment webHostEnvironment)
         {
             _aplicationDbContext = aplicationDbContext;
             _webHostEnvironment = webHostEnvironment;
+            //SE INICIALIZA UN REGISTRES PROVIDER PARA LA GENERACION DEL RESPORTE DE ESTADO DE CUENTA
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
         }
 
+        // METODO DEL API TIPO GET QUE RETORNA UN CLIENTE FILTRADO POR SI ID
         [HttpGet("{Id:int}")]
         public async Task<ActionResult<Clientes>> Get(int Id)
         {
@@ -43,19 +49,25 @@ namespace Back_End.Controllers
 
             return cliente;
         }
-        [AllowAnonymous]
+
+        //METODO DEL API TIPO GET DONDE SE GENERA EL REPORTE DE ESTADO DE CUENTA QUE DEVUELVE UN FILE TIPO PDF 
         [HttpGet("reporte/{Id:int}")]
         public ActionResult reporte(int Id)
         {
             string mimetype = "";
             int extension = 1;
+            //RUTA DEL REPORTE
             var path = $"{this._webHostEnvironment.WebRootPath}\\report\\EstadoCuenta.rdlc";
+            //FILTRO DE REGISTROS POR ID DEL CLIENTE QUE SE RECIBE COMO PARAMETRO
             var data = _aplicationDbContext.OrdenesVentas.Where(x => x.idCliente == Id).ToList();
+            //DICCIONARIO DE PARAMETROS PARA EL REPORTE
             Dictionary<string, string> parameters = new Dictionary<string, string>();
-            //parameters.Add("","")
+            // SE INICIALIZA EL REPORTE CON LA RUTA DEFINIDA MAS ARRIBA
             LocalReport localReport = new LocalReport(path);
+            //SE AGREGA EL DATASET CORRESPONDIENTE AL REPORTE Y SE AGREGA LA DATA FILTRADA
             localReport.AddDataSource("DataSet1", data);
-            if (parameters != null && parameters.Count > 0)// if you use parameter in report
+            //SE AGREGAN LOS PARAMETROS AL REPORTE SI SE USAN
+            if (parameters != null && parameters.Count > 0)
             {
                 List<ReportParameter> reportparameter = new List<ReportParameter>();
                 foreach (var record in parameters)
@@ -64,11 +76,13 @@ namespace Back_End.Controllers
                 }
 
             }
+            //SE EJECUTA EL REPORTE
             var result = localReport.Execute(RenderType.Pdf, extension, parameters, mimetype);
+            //SE DEVUELVE UN FILE CON EL MAINSTREAM DEL REPORTE Y UN APPLICATION/JSON
             return File(result.MainStream,"application/pdf");
         }
 
-
+        //METODO DEL API DE TIPO GET QUE RETORNA UN LISTADO DE TODO LOS CLIENTES CON UN LIMITE DE 25000
         [HttpGet] 
         public async Task<ActionResult<List<Clientes>>> Get([FromQuery] PaginacionDTO paginacionDTO)
         {
@@ -76,7 +90,7 @@ namespace Back_End.Controllers
             await HttpContext.InsertarParametrosPaginacionEnCabecera(queryable);
             return await queryable.Paginar(paginacionDTO).ToListAsync();           
         }
-
+        //METODO DEL API DE TIPO GET QUE REALIZA UNA BUSQUEDA POR EL NOMBRE DEL CLIENTE
         [HttpGet("filtro")]
         public async Task<ActionResult<List<Clientes>>> filtro([FromQuery] PaginacionDTO paginacionDTO, string search)
         {
@@ -84,6 +98,8 @@ namespace Back_End.Controllers
             await HttpContext.InsertarParametrosPaginacionEnCabecera(queryable);
             return await queryable.Paginar(paginacionDTO).ToListAsync();
         }
+
+        //METODO DEL API DE TIPO POST QUE CREA UN CLIENTE
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] Clientes Cliente)
         {
@@ -92,6 +108,7 @@ namespace Back_End.Controllers
             return NoContent();
         }
 
+        //METODO DEL API TIPO PUT QUE ACTUALIZA UN CLIENTE 
         [HttpPut("{id:int}")]
         public async Task<ActionResult> Put(int Id, [FromBody] Clientes clientes)
         {
@@ -109,6 +126,8 @@ namespace Back_End.Controllers
             await _aplicationDbContext.SaveChangesAsync();
             return NoContent();
         }
+
+        //METODO DEL API TIPO DELETE QUE ELIMINA UN CLIENTE
 
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> Delete(int id)

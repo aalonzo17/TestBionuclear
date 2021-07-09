@@ -13,8 +13,9 @@ export class SeguridadInterceptorService implements HttpInterceptor {
     const token = this.seguridadService.obtenerToken();
     if (token){
       req = req.clone({
-        setHeaders: {Authorization: `Bearer ${token}`}
+        setHeaders: {Authorization: `Bearer ${token}`} 
       })
+      console.log(req);
     }
 
     return next.handle(req);

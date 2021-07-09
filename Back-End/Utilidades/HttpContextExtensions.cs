@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Back_End.Utilidades
 {
+    /*Se creo esta clase de extension para poder agregar al header de la respuesta http la cantidad de restros a paginar*/
     public static class HttpContextExtensions
     {
         public async static Task InsertarParametrosPaginacionEnCabecera<T>(this HttpContext httpContext,
